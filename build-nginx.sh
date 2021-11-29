@@ -19,6 +19,7 @@ declare -r TOKEN27_TAG="${TOKEN27_TAG_PREFIX}:${VERSION_NGINX}"
 declare -r TOKEN27_TAG_DEV="${TOKEN27_TAG}-dev"
 
 TAG_FILE="./tmp/build-${IMAGE}.tags"
+touch "$TAG_FILE"
 
 sed -E "s/${IMAGE_ORIGINAL_TAG}/${IMAGE_TAG}/g" "./docker/${IMAGE}.Dockerfile" | docker build --pull -t "${TOKEN27_TAG}" \
   --build-arg=NGINX_VHOST_TEMPLATE=php-fpm --target="http" -f - . &&
