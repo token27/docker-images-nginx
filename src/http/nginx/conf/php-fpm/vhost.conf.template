@@ -1,0 +1,32 @@
+server {
+    listen ${NGINX_PORT};
+    listen [::]:${NGINX_PORT};
+    server_name  ${NGINX_SERVER_NAME};
+
+    root    ${NGINX_DOCUMENT_ROOT};
+
+    charset UTF-8;
+    error_log /var/log/nginx/default-error.log;
+    access_log /var/log/nginx/default-access.log;
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+
+
+    location / {
+        rewrite ^ /index.php last;
+    }
+
+    location ~ \.php$ {
+        include /etc/nginx/location.d-enabled/*.conf;
+        
+        fastcgi_pass   ${FCGI_CONNECT};
+
+        include        fastcgi_params;
+
+        fastcgi_param SCRIPT_FILENAME ${ESCAPE}document_root${ESCAPE}fastcgi_script_name;
+        fastcgi_param DOCUMENT_ROOT ${ESCAPE}document_root;
+    }
+}
